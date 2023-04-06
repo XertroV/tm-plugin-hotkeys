@@ -311,6 +311,8 @@ namespace Bind {
         if (!keysWithBindings[key]) return UI::InputBlocking::DoNothing;
         // get a list of plugins to perform an action on
         auto toggleList = GetPluginListFor(key);
+        if (toggleList.Length == 0) return UI::InputBlocking::DoNothing;
+
         dictionary groupToggleStatus;
         dictionary pluginDestStatus;
         dictionary pluginGroupStatus;
@@ -336,7 +338,9 @@ namespace Bind {
         string[] logs = {};
         SetPluginsEnabled(pluginDestStatus, logs);
         SetPluginsEnabled(pluginGroupStatus, logs);
-        trace("  >>  Set Plugins On/Off:\n" + string::Join(logs, "\n"));
+        string mainMsg = string::Join(logs, "\n");
+        Notify(mainMsg);
+        trace("  >>  Set Plugins On/Off:\n" + mainMsg);
         return UI::InputBlocking::DoNothing;
     }
 
@@ -379,6 +383,7 @@ namespace Bind {
     }
 
     bool MatchKeyPress(Json::Value@ item, VirtualKey key) {
+        if (!bool(item['enabled'])) return false;
         bool needCtrl = bool(item['+ctrl']);
         bool needShift = bool(item['+shift']);
         return int(item['key']) == key

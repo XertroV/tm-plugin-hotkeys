@@ -3,6 +3,7 @@ name     = "Plugin Hotkeys"
 author   = "XertroV"
 category = "Utilities"
 version  = "0.1.0"
+siteid   = 365
 
 [script]
 #__DEFINES__

@@ -39,15 +39,16 @@ void InsertToJsonArrayAt(Json::Value@ arr, Json::Value@ item, uint index) {
         return;
     }
     if (arr.Length == 1) {
-        arr.Add(arr[0]);
+        auto tmp = arr[0];
         arr[0] = item;
+        arr.Add(tmp);
         return;
     }
     // start from last
     auto lastIx = arr.Length - 1;
     auto tmp = arr[lastIx];
     arr.Add(tmp);
-    for (uint i = lastIx - 1; i > index; i--) {
+    for (uint i = lastIx - 1; i >= index; i--) {
         arr[i + 1] = arr[i];
     }
     arr[index] = item;

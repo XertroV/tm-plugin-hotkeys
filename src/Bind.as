@@ -366,8 +366,8 @@ namespace Bind {
     }
 
     Json::Value@[]@ GetPluginListFor(VirtualKey key) {
-        ctrlActive = Time::Now - g_CtrlDown < 500;
-        shiftActive = Time::Now - g_ShiftDown < 500;
+        ctrlActive = Time::Now - g_CtrlDown < 600;
+        shiftActive = Time::Now - g_ShiftDown < 600;
         array<Json::Value@> ret;
         for (uint i = 0; i < _db.Length; i++) {
             auto item = _db[i];

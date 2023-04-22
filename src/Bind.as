@@ -24,6 +24,23 @@ namespace Bind {
     }
 
     void DrawSettings() {
+        UI::AlignTextToFramePadding();
+        UI::Text("Menu Override Key: " + tostring(S_MenuOverrideKey));
+        AddSimpleTooltip("In menus (or while typing), you need to hold down this key while you trigger a hotkey.");
+        UI::SameLine();
+        if (UI::Button("Rebind##overridekey")) {
+            StartRebind("Menu Override Key");
+        }
+        bool amDone = (rebindAborted || gotNextKey) && !rebindInProgress && activeKeyName == "Menu Override Key";
+        if (amDone && gotNextKey) {
+            ResetBindingState();
+            S_MenuOverrideKey = tmpKey;
+        }
+        UI::SameLine();
+        S_EditorNeedsOverride = UI::Checkbox("Editor requires override, too?", S_EditorNeedsOverride);
+
+        UI::Separator();
+
         DrawAddPluginDropdown();
 
         if (UI::BeginTable("bindings", 7, UI::TableFlags::SizingStretchSame)) {
@@ -173,7 +190,7 @@ namespace Bind {
         AddSimpleTooltip(plugin is null ? "Unknown Plugin " : plugin.Enabled ? "Plugin Enabled" : "Plugin Disabled");
 
         UI::TableNextColumn();
-        UI::Text(name.Split("##")[0]);
+        UI::Text((bool(binding['enabled']) ? "" : "\\$888") + name.Split("##")[0]);
 
         UI::TableNextColumn();
         UI::Text(tostring(valIn));
@@ -291,6 +308,12 @@ namespace Bind {
  If a binding is set to Group_ToggleInverse, then it will be enabled when the group is toggled off, and disabled when the group is toggled on.
 
  **Group actions have priority over non-group actions.**
+
+ ### Menus & Typing
+
+ In order not to toggle hotkeys when typing, they will not be active while typing or in menus unless another key is held down.
+ By default this is the Home key.
+
         """);
     }
 
@@ -309,9 +332,21 @@ namespace Bind {
         }
         // if we don't have a binding for this key, exit befor checking anything expensive
         if (!keysWithBindings[key]) return UI::InputBlocking::DoNothing;
+
+        // if we're in the menu/editor input maps, make sure we really want to trigger key bindings
+        if (g_MenuOverrideDown <= 0
+            && (g_UsingMenuMap || (S_EditorNeedsOverride && g_InEditor))
+        ) {
+            trace('not reacting to hotkey b/c in menu/editor');
+            return UI::InputBlocking::DoNothing;
+        }
+
+
         // get a list of plugins to perform an action on
         auto toggleList = GetPluginListFor(key);
         if (toggleList.Length == 0) return UI::InputBlocking::DoNothing;
+
+        trace('Hotkeys for nb plugins: ' + toggleList.Length);
 
         dictionary groupToggleStatus;
         dictionary pluginDestStatus;

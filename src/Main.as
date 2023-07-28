@@ -49,22 +49,24 @@ UI::InputBlocking OnKeyPress(bool down, VirtualKey key) {
 
 
 void InsertToJsonArrayAt(Json::Value@ arr, Json::Value@ item, uint index) {
-    if (index >= arr.Length) {
+    auto len = arr.Length;
+    // print("InsertToJsonArrayAt [" + len + "] at " + index);
+    if (index >= len) {
         arr.Add(item);
         return;
     }
-    if (arr.Length == 1) {
+    if (len == 1) {
         auto tmp = arr[0];
         arr[0] = item;
         arr.Add(tmp);
         return;
     }
     // start from last
-    auto lastIx = arr.Length - 1;
+    auto lastIx = len - 1;
     auto tmp = arr[lastIx];
     arr.Add(tmp);
-    for (uint i = lastIx - 1; i >= index; i--) {
-        arr[i + 1] = arr[i];
+    for (uint i = lastIx; i > index && i < len; i--) {
+        arr[i] = arr[i - 1];
     }
     arr[index] = item;
 }

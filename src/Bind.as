@@ -41,6 +41,10 @@ namespace Bind {
 
         UI::Separator();
 
+        S_DisableActivationNotifs= UI::Checkbox("Disable Activation Notifications", S_DisableActivationNotifs);
+
+        UI::Separator();
+
         DrawAddPluginDropdown();
 
         if (UI::BeginTable("bindings", 7, UI::TableFlags::SizingStretchSame)) {
@@ -374,7 +378,9 @@ namespace Bind {
         SetPluginsEnabled(pluginDestStatus, logs);
         SetPluginsEnabled(pluginGroupStatus, logs);
         string mainMsg = string::Join(logs, "\n");
-        Notify(mainMsg);
+        if (!S_DisableActivationNotifs) {
+            Notify(mainMsg);
+        }
         trace("  >>  Set Plugins On/Off:\n" + mainMsg);
         return UI::InputBlocking::DoNothing;
     }

@@ -59,7 +59,7 @@ namespace Bind {
 
             for (uint i = 0; i < _db.Length; i++) {
                 auto item = _db[i];
-                UI::PushID(item['nonce']);
+                UI::PushID(string(item['nonce']));
                 item['key'] = int(DrawKeyBinding(string(item['name']) + "##" + string(item['nonce']), VirtualKey(int(item['key'])), item, i));
                 // item['enabled'] = DrawKeyBindSwitch("show-hide", bool(item['enabled']));
                 UI::PopID();

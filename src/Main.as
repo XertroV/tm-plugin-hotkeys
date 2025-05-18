@@ -1,3 +1,5 @@
+const float UI_SCALE = UI::GetScale();
+
 void Main() {
     Bind::Init();
 }

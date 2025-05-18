@@ -48,13 +48,13 @@ namespace Bind {
         DrawAddPluginDropdown();
 
         if (UI::BeginTable("bindings", 7, UI::TableFlags::SizingStretchSame)) {
-            UI::TableSetupColumn("##status", UI::TableColumnFlags::WidthFixed, 24);
+            UI::TableSetupColumn("##status", UI::TableColumnFlags::WidthFixed, 24 * UI_SCALE);
             UI::TableSetupColumn("Name", UI::TableColumnFlags::WidthStretch, 1.1);
             UI::TableSetupColumn("Binding", UI::TableColumnFlags::WidthStretch, .5f);
-            UI::TableSetupColumn("Modifiers", UI::TableColumnFlags::WidthFixed, 70);
-            UI::TableSetupColumn("Action", UI::TableColumnFlags::WidthFixed, 140);
-            UI::TableSetupColumn("", UI::TableColumnFlags::WidthFixed, 100);
-            UI::TableSetupColumn("", UI::TableColumnFlags::WidthFixed, 100);
+            UI::TableSetupColumn("Modifiers", UI::TableColumnFlags::WidthFixed, 70 * UI_SCALE);
+            UI::TableSetupColumn("Action", UI::TableColumnFlags::WidthFixed, 140 * UI_SCALE);
+            UI::TableSetupColumn("", UI::TableColumnFlags::WidthFixed, 100 * UI_SCALE);
+            UI::TableSetupColumn("", UI::TableColumnFlags::WidthFixed, 100 * UI_SCALE);
             UI::TableHeadersRow();
 
             for (uint i = 0; i < _db.Length; i++) {
